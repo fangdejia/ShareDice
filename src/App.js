@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-//import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import DiceGame from '../build/contracts/DiceGame.json'
 import getWeb3 from './utils/getWeb3'
 
