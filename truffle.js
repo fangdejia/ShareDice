@@ -1,6 +1,6 @@
 require('babel-register');
-var HDWalletProvider = require("truffle-hdwallet-provider");
-var mnemonic="engage solve diet staff equal pulp guess album engine reject treat brief";
+let HDWalletProvider = require("truffle-hdwallet-provider");
+let mnemonic="engage solve diet staff equal pulp guess album engine reject treat brief";
 module.exports = {
     networks: {
         //development: {
@@ -18,5 +18,5 @@ module.exports = {
             network_id: 4,
             gas: 4612388
         }
-    }
+  }
 };
