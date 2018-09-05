@@ -27,7 +27,7 @@ contract PlayerBook {
     );
 
     modifier isOwner() {
-        require(msg.sender==owner, "msg sender is not a dev");
+        require(msg.sender==owner, "msg sender is not owner");
         _;
     }
 
