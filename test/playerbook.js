@@ -13,8 +13,12 @@ contract('PlayerBook', (accounts) => {
         assert.equal(rst,false);
     });
     it('should register user successfully!', async () => {
+        //注册名字
         await playerBook.registerName('jack',accounts[1],{value: web3.toWei(0.01, "ether"),from:accounts[0]});
         let rst=await playerBook.checkIfNameValid.call('jack');
         assert.equal(rst,true);
+        //根据地址获取名字
+        rst=await playerBook.getUserName.call({from:accounts[0]});
+        assert.equal(rst,'jack');
     });
 });

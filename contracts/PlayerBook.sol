@@ -3,6 +3,7 @@ import "./library/SafeMath.sol";
 import "./library/NameFilter.sol";
 contract PlayerBook {
     using NameFilter for string;
+    using NameFilter for bytes32;
     using SafeMath for uint256;
 
     struct Player {
@@ -67,6 +68,11 @@ contract PlayerBook {
     function checkIfNameValid(string name) public view returns (bool) {
         bytes32 _name=name.nameFilter();
         return name2pid[_name] >0?true:false;
+    }
+
+    //获取某个地址下的名字
+    function getUserName() external view returns (string) {
+         return playerSet[addr2pid[msg.sender]].name.bytes32ToString();
     }
 
     //设置注册用户名的费用
