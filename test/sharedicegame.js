@@ -8,8 +8,7 @@ contract('ShareDiceGame', (accounts) => {
     let owner;
     beforeEach('setup contract for each test', async () => {
         diceGame=await ShareDiceGame.deployed();
-        let web3Contract=web3.eth.contract(diceGame.abi).at(diceGame.address);
-        owner=web3Contract._eth.coinbase;
+        owner=diceGame.owner;
     });
 
     it('should have three round!', async () => {
