@@ -14,7 +14,7 @@ contract('DiceGame', async (accounts) => {
         console.log(`play room number is :${agent},${roomNum}`);
         let event=diceGame.JoinSuccess();
         event.watch((err, result) => {
-            emsg=result['args'];
+            let emsg=result['args'];
             console.log(`receive event: ${emsg['_from']},ts:${emsg['_rollTime']}`);
             event.stopWatching();
         });

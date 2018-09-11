@@ -9,12 +9,12 @@ module.exports = {
             //network_id: "*"
         //},
         development: {
-            provider: new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/",0),
+            provider: new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/",0,5),
             network_id: 4,
             gas: 4612388
         },
         rinkeby: {
-            provider: new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/",0),
+            provider: new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/",0,5),
             network_id: 4,
             gas: 4612388
         }

@@ -8,7 +8,7 @@ contract('ShareDiceGame', (accounts) => {
     let owner;
     beforeEach('setup contract for each test', async () => {
         diceGame=await ShareDiceGame.deployed();
-        owner=diceGame.owner;
+        owner=await diceGame.owner.call();
     });
 
     it('should have three round!', async () => {
@@ -46,11 +46,11 @@ contract('ShareDiceGame', (accounts) => {
         filter.get((error,log) => {
             console.log(log);
         });
-        filter.stopWatching();
+        filter.stopWatching((err,res) => err?console.log(err):console.log('Stopped watching!'));
 
         await sleep(60000);
         console.log("=========驱动到期的某一期结算==========");
-        tx = await diceGame.settleRoundResult(roundNum,{from:accounts[2]});
+        tx = await diceGame.settleRoundResult(roundNum,{from:accounts[0]});
         truffleAssert.eventEmitted(tx, 'ResultEvent', (ev) => {
             console.log(ev);
             return ev.payout >0;

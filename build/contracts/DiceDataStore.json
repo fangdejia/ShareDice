@@ -115,24 +115,24 @@
       "type": "event"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b50610165806100206000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063127f0b3f14610051578063917d6acb1461007c575b600080fd5b34801561005d57600080fd5b506100666100e3565b6040518082815260200191505060405180910390f35b34801561008857600080fd5b506100a7600480360381019080803590602001909291905050506100e9565b604051808681526020018581526020018481526020018360ff1660ff168152602001821515151581526020019550505050505060405180910390f35b60015481565b60006020528060005260406000206000915090508060010154908060020154908060030154908060040160009054906101000a900460ff16908060040160019054906101000a900460ff169050855600a165627a7a72305820c521f18fd69607164d11e56ad7f782715c50a56fae0b9d2820f9f91b40d1d0dd0029",
-  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063127f0b3f14610051578063917d6acb1461007c575b600080fd5b34801561005d57600080fd5b506100666100e3565b6040518082815260200191505060405180910390f35b34801561008857600080fd5b506100a7600480360381019080803590602001909291905050506100e9565b604051808681526020018581526020018481526020018360ff1660ff168152602001821515151581526020019550505050505060405180910390f35b60015481565b60006020528060005260406000206000915090508060010154908060020154908060030154908060040160009054906101000a900460ff16908060040160019054906101000a900460ff169050855600a165627a7a72305820c521f18fd69607164d11e56ad7f782715c50a56fae0b9d2820f9f91b40d1d0dd0029",
-  "sourceMap": "25:1422:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:1422:0;;;;;;;",
-  "deployedSourceMap": "25:1422:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;778:25;;8:9:-1;5:2;;;30:1;27;20:12;5:2;778:25:0;;;;;;;;;;;;;;;;;;;;;;;726:45;;8:9:-1;5:2;;;30:1;27;20:12;5:2;726:45:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;778:25;;;;:::o;726:45::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "bytecode": "0x608060405234801561001057600080fd5b50610165806100206000396000f30060806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063127f0b3f14610051578063917d6acb1461007c575b600080fd5b34801561005d57600080fd5b506100666100e3565b6040518082815260200191505060405180910390f35b34801561008857600080fd5b506100a7600480360381019080803590602001909291905050506100e9565b604051808681526020018581526020018481526020018360ff1660ff168152602001821515151581526020019550505050505060405180910390f35b60015481565b60006020528060005260406000206000915090508060010154908060020154908060030154908060040160009054906101000a900460ff16908060040160019054906101000a900460ff169050855600a165627a7a7230582016de4537b6573f9db84726b17ab001d47e1f8851ef343463a1f500b805e610700029",
+  "deployedBytecode": "0x60806040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063127f0b3f14610051578063917d6acb1461007c575b600080fd5b34801561005d57600080fd5b506100666100e3565b6040518082815260200191505060405180910390f35b34801561008857600080fd5b506100a7600480360381019080803590602001909291905050506100e9565b604051808681526020018581526020018481526020018360ff1660ff168152602001821515151581526020019550505050505060405180910390f35b60015481565b60006020528060005260406000206000915090508060010154908060020154908060030154908060040160009054906101000a900460ff16908060040160019054906101000a900460ff169050855600a165627a7a7230582016de4537b6573f9db84726b17ab001d47e1f8851ef343463a1f500b805e610700029",
+  "sourceMap": "25:1422:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:1422:1;;;;;;;",
+  "deployedSourceMap": "25:1422:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;778:25;;8:9:-1;5:2;;;30:1;27;20:12;5:2;778:25:1;;;;;;;;;;;;;;;;;;;;;;;726:45;;8:9:-1;5:2;;;30:1;27;20:12;5:2;726:45:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;778:25;;;;:::o;726:45::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
   "source": "pragma solidity ^0.4.24;\ncontract DiceDataStore {\n    //每期的参与者情况\n    struct PalyerBetInfo {\n        address player;//参与者地址\n        uint256 joinTime;//加入时间\n        uint256 ticketVol;//份数            \n        uint256 winCount;//胜出的数量\n        mapping(uint256=>int8) resultSet;//每个骰子的点数\n    }\n\n    //每期的情况\n    struct RoundInfo {\n        mapping(uint256=>PalyerBetInfo) playerBetInfoSet;//每期包括的参与者\n        uint256 playerCount;//参与者数量\n        uint256 startTime;//开始时间\n        uint256 winCount;//获胜者数量\n        uint8 winDiceNum;//骰子最大的点数\n        bool is_activate;//是否可用的\n    }\n\n    //总表\n    mapping(uint256 => RoundInfo) public RoundSet; \n    uint256 public roundCount;//一共开了多少轮\n\n\n    //使用事件记录每个玩家参与过的期数,或通知前端加入成功\n    event JoinEvent(\n        address indexed player,//参与者地址\n        uint256 roundNum,//参与第几期\n        uint256 joinTime,//加入时间\n        uint256 ticketVol//份数            \n    );\n\n    //结果通知\n    event ResultEvent(\n        address indexed player,//参与者地址\n        uint256 roundNum,//参与第几期\n        uint256 winCount,//多少个赢了\n        uint256 diceSeries,//骰子的随机序列\n        uint256 payout,//支付额\n        uint8 winDiceNum //获胜骰子最大的点数\n    );\n\n}\n",
-  "sourcePath": "/Users/sky/Workplace/ShareDice/contracts/DiceDataStore.sol",
+  "sourcePath": "/usr/local/ShareDice/contracts/DiceDataStore.sol",
   "ast": {
-    "absolutePath": "/Users/sky/Workplace/ShareDice/contracts/DiceDataStore.sol",
+    "absolutePath": "/usr/local/ShareDice/contracts/DiceDataStore.sol",
     "exportedSymbols": {
       "DiceDataStore": [
-        60
+        1079
       ]
     },
-    "id": 61,
+    "id": 1080,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1,
+        "id": 1020,
         "literals": [
           "solidity",
           "^",
@@ -140,7 +140,7 @@
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:0"
+        "src": "0:24:1"
       },
       {
         "baseContracts": [],
@@ -148,24 +148,24 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 60,
+        "id": 1079,
         "linearizedBaseContracts": [
-          60
+          1079
         ],
         "name": "DiceDataStore",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "DiceDataStore.PalyerBetInfo",
-            "id": 14,
+            "id": 1033,
             "members": [
               {
                 "constant": false,
-                "id": 3,
+                "id": 1022,
                 "name": "player",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "116:14:0",
+                "scope": 1033,
+                "src": "116:14:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -173,10 +173,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 2,
+                  "id": 1021,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "116:7:0",
+                  "src": "116:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -187,11 +187,11 @@
               },
               {
                 "constant": false,
-                "id": 5,
+                "id": 1024,
                 "name": "joinTime",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "157:16:0",
+                "scope": 1033,
+                "src": "157:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -199,10 +199,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 4,
+                  "id": 1023,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "157:7:0",
+                  "src": "157:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -213,11 +213,11 @@
               },
               {
                 "constant": false,
-                "id": 7,
+                "id": 1026,
                 "name": "ticketVol",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "197:17:0",
+                "scope": 1033,
+                "src": "197:17:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -225,10 +225,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 6,
+                  "id": 1025,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "197:7:0",
+                  "src": "197:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -239,11 +239,11 @@
               },
               {
                 "constant": false,
-                "id": 9,
+                "id": 1028,
                 "name": "winCount",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "244:16:0",
+                "scope": 1033,
+                "src": "244:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -251,10 +251,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 8,
+                  "id": 1027,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "244:7:0",
+                  "src": "244:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -265,11 +265,11 @@
               },
               {
                 "constant": false,
-                "id": 13,
+                "id": 1032,
                 "name": "resultSet",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "287:32:0",
+                "scope": 1033,
+                "src": "287:32:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -277,28 +277,28 @@
                   "typeString": "mapping(uint256 => int8)"
                 },
                 "typeName": {
-                  "id": 12,
+                  "id": 1031,
                   "keyType": {
-                    "id": 10,
+                    "id": 1029,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "295:7:0",
+                    "src": "295:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "Mapping",
-                  "src": "287:22:0",
+                  "src": "287:22:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_mapping$_t_uint256_$_t_int8_$",
                     "typeString": "mapping(uint256 => int8)"
                   },
                   "valueType": {
-                    "id": 11,
+                    "id": 1030,
                     "name": "int8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "304:4:0",
+                    "src": "304:4:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_int8",
                       "typeString": "int8"
@@ -311,54 +311,54 @@
             ],
             "name": "PalyerBetInfo",
             "nodeType": "StructDefinition",
-            "scope": 60,
-            "src": "85:264:0",
+            "scope": 1079,
+            "src": "85:264:1",
             "visibility": "public"
           },
           {
             "canonicalName": "DiceDataStore.RoundInfo",
-            "id": 29,
+            "id": 1048,
             "members": [
               {
                 "constant": false,
-                "id": 18,
+                "id": 1037,
                 "name": "playerBetInfoSet",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "404:48:0",
+                "scope": 1048,
+                "src": "404:48:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_PalyerBetInfo_$14_storage_$",
+                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_PalyerBetInfo_$1033_storage_$",
                   "typeString": "mapping(uint256 => struct DiceDataStore.PalyerBetInfo)"
                 },
                 "typeName": {
-                  "id": 17,
+                  "id": 1036,
                   "keyType": {
-                    "id": 15,
+                    "id": 1034,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "412:7:0",
+                    "src": "412:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "Mapping",
-                  "src": "404:31:0",
+                  "src": "404:31:1",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_PalyerBetInfo_$14_storage_$",
+                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_PalyerBetInfo_$1033_storage_$",
                     "typeString": "mapping(uint256 => struct DiceDataStore.PalyerBetInfo)"
                   },
                   "valueType": {
                     "contractScope": null,
-                    "id": 16,
+                    "id": 1035,
                     "name": "PalyerBetInfo",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 14,
-                    "src": "421:13:0",
+                    "referencedDeclaration": 1033,
+                    "src": "421:13:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_PalyerBetInfo_$14_storage_ptr",
+                      "typeIdentifier": "t_struct$_PalyerBetInfo_$1033_storage_ptr",
                       "typeString": "struct DiceDataStore.PalyerBetInfo"
                     }
                   }
@@ -368,11 +368,11 @@
               },
               {
                 "constant": false,
-                "id": 20,
+                "id": 1039,
                 "name": "playerCount",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "488:19:0",
+                "scope": 1048,
+                "src": "488:19:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -380,10 +380,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 19,
+                  "id": 1038,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "488:7:0",
+                  "src": "488:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -394,11 +394,11 @@
               },
               {
                 "constant": false,
-                "id": 22,
+                "id": 1041,
                 "name": "startTime",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "534:17:0",
+                "scope": 1048,
+                "src": "534:17:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -406,10 +406,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 21,
+                  "id": 1040,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "534:7:0",
+                  "src": "534:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -420,11 +420,11 @@
               },
               {
                 "constant": false,
-                "id": 24,
+                "id": 1043,
                 "name": "winCount",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "575:16:0",
+                "scope": 1048,
+                "src": "575:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -432,10 +432,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 23,
+                  "id": 1042,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "575:7:0",
+                  "src": "575:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -446,11 +446,11 @@
               },
               {
                 "constant": false,
-                "id": 26,
+                "id": 1045,
                 "name": "winDiceNum",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "618:16:0",
+                "scope": 1048,
+                "src": "618:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -458,10 +458,10 @@
                   "typeString": "uint8"
                 },
                 "typeName": {
-                  "id": 25,
+                  "id": 1044,
                   "name": "uint8",
                   "nodeType": "ElementaryTypeName",
-                  "src": "618:5:0",
+                  "src": "618:5:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint8",
                     "typeString": "uint8"
@@ -472,11 +472,11 @@
               },
               {
                 "constant": false,
-                "id": 28,
+                "id": 1047,
                 "name": "is_activate",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "667:16:0",
+                "scope": 1048,
+                "src": "667:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -484,10 +484,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 27,
+                  "id": 1046,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "667:4:0",
+                  "src": "667:4:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -499,50 +499,50 @@
             ],
             "name": "RoundInfo",
             "nodeType": "StructDefinition",
-            "scope": 60,
-            "src": "377:330:0",
+            "scope": 1079,
+            "src": "377:330:1",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 33,
+            "id": 1052,
             "name": "RoundSet",
             "nodeType": "VariableDeclaration",
-            "scope": 60,
-            "src": "726:45:0",
+            "scope": 1079,
+            "src": "726:45:1",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RoundInfo_$29_storage_$",
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RoundInfo_$1048_storage_$",
               "typeString": "mapping(uint256 => struct DiceDataStore.RoundInfo)"
             },
             "typeName": {
-              "id": 32,
+              "id": 1051,
               "keyType": {
-                "id": 30,
+                "id": 1049,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "734:7:0",
+                "src": "734:7:1",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "726:29:0",
+              "src": "726:29:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RoundInfo_$29_storage_$",
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RoundInfo_$1048_storage_$",
                 "typeString": "mapping(uint256 => struct DiceDataStore.RoundInfo)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 31,
+                "id": 1050,
                 "name": "RoundInfo",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 29,
-                "src": "745:9:0",
+                "referencedDeclaration": 1048,
+                "src": "745:9:1",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_RoundInfo_$29_storage_ptr",
+                  "typeIdentifier": "t_struct$_RoundInfo_$1048_storage_ptr",
                   "typeString": "struct DiceDataStore.RoundInfo"
                 }
               }
@@ -552,11 +552,11 @@
           },
           {
             "constant": false,
-            "id": 35,
+            "id": 1054,
             "name": "roundCount",
             "nodeType": "VariableDeclaration",
-            "scope": 60,
-            "src": "778:25:0",
+            "scope": 1079,
+            "src": "778:25:1",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -564,10 +564,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 34,
+              "id": 1053,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "778:7:0",
+              "src": "778:7:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -579,21 +579,21 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 45,
+            "id": 1064,
             "name": "JoinEvent",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 44,
+              "id": 1063,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 37,
+                  "id": 1056,
                   "indexed": true,
                   "name": "player",
                   "nodeType": "VariableDeclaration",
-                  "scope": 45,
-                  "src": "942:22:0",
+                  "scope": 1064,
+                  "src": "942:22:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -601,10 +601,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 36,
+                    "id": 1055,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "942:7:0",
+                    "src": "942:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -615,12 +615,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 39,
+                  "id": 1058,
                   "indexed": false,
                   "name": "roundNum",
                   "nodeType": "VariableDeclaration",
-                  "scope": 45,
-                  "src": "991:16:0",
+                  "scope": 1064,
+                  "src": "991:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -628,10 +628,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 38,
+                    "id": 1057,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "991:7:0",
+                    "src": "991:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -642,12 +642,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 41,
+                  "id": 1060,
                   "indexed": false,
                   "name": "joinTime",
                   "nodeType": "VariableDeclaration",
-                  "scope": 45,
-                  "src": "1034:16:0",
+                  "scope": 1064,
+                  "src": "1034:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -655,10 +655,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 40,
+                    "id": 1059,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1034:7:0",
+                    "src": "1034:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -669,12 +669,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 43,
+                  "id": 1062,
                   "indexed": false,
                   "name": "ticketVol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 45,
-                  "src": "1074:17:0",
+                  "scope": 1064,
+                  "src": "1074:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -682,10 +682,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 42,
+                    "id": 1061,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1074:7:0",
+                    "src": "1074:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -695,28 +695,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "932:185:0"
+              "src": "932:185:1"
             },
-            "src": "917:201:0"
+            "src": "917:201:1"
           },
           {
             "anonymous": false,
             "documentation": null,
-            "id": 59,
+            "id": 1078,
             "name": "ResultEvent",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 58,
+              "id": 1077,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 47,
+                  "id": 1066,
                   "indexed": true,
                   "name": "player",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1170:22:0",
+                  "scope": 1078,
+                  "src": "1170:22:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -724,10 +724,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 46,
+                    "id": 1065,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1170:7:0",
+                    "src": "1170:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -738,12 +738,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 49,
+                  "id": 1068,
                   "indexed": false,
                   "name": "roundNum",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1219:16:0",
+                  "scope": 1078,
+                  "src": "1219:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -751,10 +751,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 48,
+                    "id": 1067,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1219:7:0",
+                    "src": "1219:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -765,12 +765,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 51,
+                  "id": 1070,
                   "indexed": false,
                   "name": "winCount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1262:16:0",
+                  "scope": 1078,
+                  "src": "1262:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -778,10 +778,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 50,
+                    "id": 1069,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1262:7:0",
+                    "src": "1262:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -792,12 +792,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 53,
+                  "id": 1072,
                   "indexed": false,
                   "name": "diceSeries",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1305:18:0",
+                  "scope": 1078,
+                  "src": "1305:18:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -805,10 +805,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 52,
+                    "id": 1071,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1305:7:0",
+                    "src": "1305:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -819,12 +819,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 55,
+                  "id": 1074,
                   "indexed": false,
                   "name": "payout",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1356:14:0",
+                  "scope": 1078,
+                  "src": "1356:14:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -832,10 +832,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 54,
+                    "id": 1073,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1356:7:0",
+                    "src": "1356:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -846,12 +846,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 57,
+                  "id": 1076,
                   "indexed": false,
                   "name": "winDiceNum",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1391:16:0",
+                  "scope": 1078,
+                  "src": "1391:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -859,10 +859,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 56,
+                    "id": 1075,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1391:5:0",
+                    "src": "1391:5:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -872,29 +872,29 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1160:283:0"
+              "src": "1160:283:1"
             },
-            "src": "1143:301:0"
+            "src": "1143:301:1"
           }
         ],
-        "scope": 61,
-        "src": "25:1422:0"
+        "scope": 1080,
+        "src": "25:1422:1"
       }
     ],
-    "src": "0:1448:0"
+    "src": "0:1448:1"
   },
   "legacyAST": {
-    "absolutePath": "/Users/sky/Workplace/ShareDice/contracts/DiceDataStore.sol",
+    "absolutePath": "/usr/local/ShareDice/contracts/DiceDataStore.sol",
     "exportedSymbols": {
       "DiceDataStore": [
-        60
+        1079
       ]
     },
-    "id": 61,
+    "id": 1080,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1,
+        "id": 1020,
         "literals": [
           "solidity",
           "^",
@@ -902,7 +902,7 @@
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:0"
+        "src": "0:24:1"
       },
       {
         "baseContracts": [],
@@ -910,24 +910,24 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 60,
+        "id": 1079,
         "linearizedBaseContracts": [
-          60
+          1079
         ],
         "name": "DiceDataStore",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "DiceDataStore.PalyerBetInfo",
-            "id": 14,
+            "id": 1033,
             "members": [
               {
                 "constant": false,
-                "id": 3,
+                "id": 1022,
                 "name": "player",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "116:14:0",
+                "scope": 1033,
+                "src": "116:14:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -935,10 +935,10 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 2,
+                  "id": 1021,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "116:7:0",
+                  "src": "116:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address",
                     "typeString": "address"
@@ -949,11 +949,11 @@
               },
               {
                 "constant": false,
-                "id": 5,
+                "id": 1024,
                 "name": "joinTime",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "157:16:0",
+                "scope": 1033,
+                "src": "157:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -961,10 +961,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 4,
+                  "id": 1023,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "157:7:0",
+                  "src": "157:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -975,11 +975,11 @@
               },
               {
                 "constant": false,
-                "id": 7,
+                "id": 1026,
                 "name": "ticketVol",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "197:17:0",
+                "scope": 1033,
+                "src": "197:17:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -987,10 +987,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 6,
+                  "id": 1025,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "197:7:0",
+                  "src": "197:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1001,11 +1001,11 @@
               },
               {
                 "constant": false,
-                "id": 9,
+                "id": 1028,
                 "name": "winCount",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "244:16:0",
+                "scope": 1033,
+                "src": "244:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1013,10 +1013,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 8,
+                  "id": 1027,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "244:7:0",
+                  "src": "244:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1027,11 +1027,11 @@
               },
               {
                 "constant": false,
-                "id": 13,
+                "id": 1032,
                 "name": "resultSet",
                 "nodeType": "VariableDeclaration",
-                "scope": 14,
-                "src": "287:32:0",
+                "scope": 1033,
+                "src": "287:32:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1039,28 +1039,28 @@
                   "typeString": "mapping(uint256 => int8)"
                 },
                 "typeName": {
-                  "id": 12,
+                  "id": 1031,
                   "keyType": {
-                    "id": 10,
+                    "id": 1029,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "295:7:0",
+                    "src": "295:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "Mapping",
-                  "src": "287:22:0",
+                  "src": "287:22:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_mapping$_t_uint256_$_t_int8_$",
                     "typeString": "mapping(uint256 => int8)"
                   },
                   "valueType": {
-                    "id": 11,
+                    "id": 1030,
                     "name": "int8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "304:4:0",
+                    "src": "304:4:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_int8",
                       "typeString": "int8"
@@ -1073,54 +1073,54 @@
             ],
             "name": "PalyerBetInfo",
             "nodeType": "StructDefinition",
-            "scope": 60,
-            "src": "85:264:0",
+            "scope": 1079,
+            "src": "85:264:1",
             "visibility": "public"
           },
           {
             "canonicalName": "DiceDataStore.RoundInfo",
-            "id": 29,
+            "id": 1048,
             "members": [
               {
                 "constant": false,
-                "id": 18,
+                "id": 1037,
                 "name": "playerBetInfoSet",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "404:48:0",
+                "scope": 1048,
+                "src": "404:48:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_PalyerBetInfo_$14_storage_$",
+                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_PalyerBetInfo_$1033_storage_$",
                   "typeString": "mapping(uint256 => struct DiceDataStore.PalyerBetInfo)"
                 },
                 "typeName": {
-                  "id": 17,
+                  "id": 1036,
                   "keyType": {
-                    "id": 15,
+                    "id": 1034,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "412:7:0",
+                    "src": "412:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "Mapping",
-                  "src": "404:31:0",
+                  "src": "404:31:1",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_PalyerBetInfo_$14_storage_$",
+                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_PalyerBetInfo_$1033_storage_$",
                     "typeString": "mapping(uint256 => struct DiceDataStore.PalyerBetInfo)"
                   },
                   "valueType": {
                     "contractScope": null,
-                    "id": 16,
+                    "id": 1035,
                     "name": "PalyerBetInfo",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 14,
-                    "src": "421:13:0",
+                    "referencedDeclaration": 1033,
+                    "src": "421:13:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_PalyerBetInfo_$14_storage_ptr",
+                      "typeIdentifier": "t_struct$_PalyerBetInfo_$1033_storage_ptr",
                       "typeString": "struct DiceDataStore.PalyerBetInfo"
                     }
                   }
@@ -1130,11 +1130,11 @@
               },
               {
                 "constant": false,
-                "id": 20,
+                "id": 1039,
                 "name": "playerCount",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "488:19:0",
+                "scope": 1048,
+                "src": "488:19:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1142,10 +1142,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 19,
+                  "id": 1038,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "488:7:0",
+                  "src": "488:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1156,11 +1156,11 @@
               },
               {
                 "constant": false,
-                "id": 22,
+                "id": 1041,
                 "name": "startTime",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "534:17:0",
+                "scope": 1048,
+                "src": "534:17:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1168,10 +1168,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 21,
+                  "id": 1040,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "534:7:0",
+                  "src": "534:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1182,11 +1182,11 @@
               },
               {
                 "constant": false,
-                "id": 24,
+                "id": 1043,
                 "name": "winCount",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "575:16:0",
+                "scope": 1048,
+                "src": "575:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1194,10 +1194,10 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 23,
+                  "id": 1042,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
-                  "src": "575:7:0",
+                  "src": "575:7:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint256",
                     "typeString": "uint256"
@@ -1208,11 +1208,11 @@
               },
               {
                 "constant": false,
-                "id": 26,
+                "id": 1045,
                 "name": "winDiceNum",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "618:16:0",
+                "scope": 1048,
+                "src": "618:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1220,10 +1220,10 @@
                   "typeString": "uint8"
                 },
                 "typeName": {
-                  "id": 25,
+                  "id": 1044,
                   "name": "uint8",
                   "nodeType": "ElementaryTypeName",
-                  "src": "618:5:0",
+                  "src": "618:5:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint8",
                     "typeString": "uint8"
@@ -1234,11 +1234,11 @@
               },
               {
                 "constant": false,
-                "id": 28,
+                "id": 1047,
                 "name": "is_activate",
                 "nodeType": "VariableDeclaration",
-                "scope": 29,
-                "src": "667:16:0",
+                "scope": 1048,
+                "src": "667:16:1",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1246,10 +1246,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 27,
+                  "id": 1046,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "667:4:0",
+                  "src": "667:4:1",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -1261,50 +1261,50 @@
             ],
             "name": "RoundInfo",
             "nodeType": "StructDefinition",
-            "scope": 60,
-            "src": "377:330:0",
+            "scope": 1079,
+            "src": "377:330:1",
             "visibility": "public"
           },
           {
             "constant": false,
-            "id": 33,
+            "id": 1052,
             "name": "RoundSet",
             "nodeType": "VariableDeclaration",
-            "scope": 60,
-            "src": "726:45:0",
+            "scope": 1079,
+            "src": "726:45:1",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RoundInfo_$29_storage_$",
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RoundInfo_$1048_storage_$",
               "typeString": "mapping(uint256 => struct DiceDataStore.RoundInfo)"
             },
             "typeName": {
-              "id": 32,
+              "id": 1051,
               "keyType": {
-                "id": 30,
+                "id": 1049,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "734:7:0",
+                "src": "734:7:1",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "726:29:0",
+              "src": "726:29:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RoundInfo_$29_storage_$",
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RoundInfo_$1048_storage_$",
                 "typeString": "mapping(uint256 => struct DiceDataStore.RoundInfo)"
               },
               "valueType": {
                 "contractScope": null,
-                "id": 31,
+                "id": 1050,
                 "name": "RoundInfo",
                 "nodeType": "UserDefinedTypeName",
-                "referencedDeclaration": 29,
-                "src": "745:9:0",
+                "referencedDeclaration": 1048,
+                "src": "745:9:1",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_RoundInfo_$29_storage_ptr",
+                  "typeIdentifier": "t_struct$_RoundInfo_$1048_storage_ptr",
                   "typeString": "struct DiceDataStore.RoundInfo"
                 }
               }
@@ -1314,11 +1314,11 @@
           },
           {
             "constant": false,
-            "id": 35,
+            "id": 1054,
             "name": "roundCount",
             "nodeType": "VariableDeclaration",
-            "scope": 60,
-            "src": "778:25:0",
+            "scope": 1079,
+            "src": "778:25:1",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -1326,10 +1326,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 34,
+              "id": 1053,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "778:7:0",
+              "src": "778:7:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -1341,21 +1341,21 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 45,
+            "id": 1064,
             "name": "JoinEvent",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 44,
+              "id": 1063,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 37,
+                  "id": 1056,
                   "indexed": true,
                   "name": "player",
                   "nodeType": "VariableDeclaration",
-                  "scope": 45,
-                  "src": "942:22:0",
+                  "scope": 1064,
+                  "src": "942:22:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1363,10 +1363,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 36,
+                    "id": 1055,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "942:7:0",
+                    "src": "942:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1377,12 +1377,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 39,
+                  "id": 1058,
                   "indexed": false,
                   "name": "roundNum",
                   "nodeType": "VariableDeclaration",
-                  "scope": 45,
-                  "src": "991:16:0",
+                  "scope": 1064,
+                  "src": "991:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1390,10 +1390,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 38,
+                    "id": 1057,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "991:7:0",
+                    "src": "991:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1404,12 +1404,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 41,
+                  "id": 1060,
                   "indexed": false,
                   "name": "joinTime",
                   "nodeType": "VariableDeclaration",
-                  "scope": 45,
-                  "src": "1034:16:0",
+                  "scope": 1064,
+                  "src": "1034:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1417,10 +1417,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 40,
+                    "id": 1059,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1034:7:0",
+                    "src": "1034:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1431,12 +1431,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 43,
+                  "id": 1062,
                   "indexed": false,
                   "name": "ticketVol",
                   "nodeType": "VariableDeclaration",
-                  "scope": 45,
-                  "src": "1074:17:0",
+                  "scope": 1064,
+                  "src": "1074:17:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1444,10 +1444,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 42,
+                    "id": 1061,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1074:7:0",
+                    "src": "1074:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1457,28 +1457,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "932:185:0"
+              "src": "932:185:1"
             },
-            "src": "917:201:0"
+            "src": "917:201:1"
           },
           {
             "anonymous": false,
             "documentation": null,
-            "id": 59,
+            "id": 1078,
             "name": "ResultEvent",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 58,
+              "id": 1077,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 47,
+                  "id": 1066,
                   "indexed": true,
                   "name": "player",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1170:22:0",
+                  "scope": 1078,
+                  "src": "1170:22:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1486,10 +1486,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 46,
+                    "id": 1065,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1170:7:0",
+                    "src": "1170:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1500,12 +1500,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 49,
+                  "id": 1068,
                   "indexed": false,
                   "name": "roundNum",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1219:16:0",
+                  "scope": 1078,
+                  "src": "1219:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1513,10 +1513,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 48,
+                    "id": 1067,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1219:7:0",
+                    "src": "1219:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1527,12 +1527,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 51,
+                  "id": 1070,
                   "indexed": false,
                   "name": "winCount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1262:16:0",
+                  "scope": 1078,
+                  "src": "1262:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1540,10 +1540,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 50,
+                    "id": 1069,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1262:7:0",
+                    "src": "1262:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1554,12 +1554,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 53,
+                  "id": 1072,
                   "indexed": false,
                   "name": "diceSeries",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1305:18:0",
+                  "scope": 1078,
+                  "src": "1305:18:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1567,10 +1567,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 52,
+                    "id": 1071,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1305:7:0",
+                    "src": "1305:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1581,12 +1581,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 55,
+                  "id": 1074,
                   "indexed": false,
                   "name": "payout",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1356:14:0",
+                  "scope": 1078,
+                  "src": "1356:14:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1594,10 +1594,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 54,
+                    "id": 1073,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1356:7:0",
+                    "src": "1356:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1608,12 +1608,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 57,
+                  "id": 1076,
                   "indexed": false,
                   "name": "winDiceNum",
                   "nodeType": "VariableDeclaration",
-                  "scope": 59,
-                  "src": "1391:16:0",
+                  "scope": 1078,
+                  "src": "1391:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1621,10 +1621,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 56,
+                    "id": 1075,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1391:5:0",
+                    "src": "1391:5:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -1634,22 +1634,35 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1160:283:0"
+              "src": "1160:283:1"
             },
-            "src": "1143:301:0"
+            "src": "1143:301:1"
           }
         ],
-        "scope": 61,
-        "src": "25:1422:0"
+        "scope": 1080,
+        "src": "25:1422:1"
       }
     ],
-    "src": "0:1448:0"
+    "src": "0:1448:1"
   },
   "compiler": {
     "name": "solc",
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x0769fb3ec8fcbc7a5040edc1e0a3d3d27b1f058d",
+      "transactionHash": "0x5fb8d5d96422bd7badaf7847e0de1385d2f708fa044f5d1288326590e768d610"
+    },
+    "4447": {
+      "events": {},
+      "links": {},
+      "address": "0xf25186b5081ff5ce73482ad761db0eb0d25abfbf",
+      "transactionHash": "0x8948abac0beaae4db7f94246914d39fb75975a1ab536f0a64f23489f82b04cc5"
+    }
+  },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-08T04:04:50.839Z"
+  "updatedAt": "2018-09-11T05:28:43.391Z"
 }
